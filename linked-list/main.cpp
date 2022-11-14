@@ -6,7 +6,7 @@
 //
 
 #include <iostream>
-#include <stdlib.h>
+//#include <stdlib.h>
 
 using namespace std;
 
@@ -22,6 +22,7 @@ class LinkedList{
 private:
     Node* head;
     Node* tail;
+    Node* iterate;
     int length;
 public:
     LinkedList(){
@@ -57,6 +58,9 @@ int main(int argc, const char * argv[]) {
     l.addToBetween(7, 2, 'r');
     l.addToHead(4);
     l.addToTail(5);
+    //l.deleteNode(5);
+  //  l.deleteNode(2);
+
     l.printNodes();
     
     return 0;
@@ -100,7 +104,7 @@ void LinkedList::addToTail(int value){
     
 }
 void LinkedList::addToBetween(int value, int target, char direction){
-    Node* iterate = this->head;
+    this->iterate = this->head;
     // If linked list is empty
     if(head == NULL){
         cout<<"Linked list is Empty. Process executed";
@@ -127,8 +131,8 @@ void LinkedList::addToBetween(int value, int target, char direction){
                     iterate->next = newNode;
                     newNode->prev = iterate;
                 }
-                
-                
+                               
+                length++;
                 break;
             }else{
                 iterate = iterate->next;
@@ -143,16 +147,63 @@ void LinkedList::addToBetween(int value, int target, char direction){
 }
 void LinkedList::deleteNode(int target){
     
+    bool isExist = false;
+    Node* temp = this->head;
+    if(head == NULL){
+        cout<<"Linked list is empty"<<endl;
+        return;
+        
+     // Delete Node from head
+    }else if(this->head->value == target){
+        head = temp->next;
+        delete temp;
+        length--;
+        
+        
+    }else if(this->tail->value == target){
+   
+        temp = tail->prev;
+        delete tail;
+        temp->next = NULL;
+        tail = temp;
+        length--;
+        
+        
+    //Delete Node from between
+    }else{
+        this->iterate = this->head;
+        length--;
+        while(iterate){
+            // Sorunu çöz listeyi basmıyo
+            if(iterate->value == target){
+                temp = iterate;
+                iterate->prev->next= iterate->next;
+                iterate->next->prev = iterate->prev;
+                delete temp;
+            }
+                
+        }
+        // If target doesn't exist
+        if(!isExist){
+            cout<<"Target doesn't exist in the linked list!"<<endl;
+        }
+        
+    }
+    
+    
+    
 }
 void LinkedList::printNodes(){
             
     Node * iterate = this->head; //start from head
-    
+    int size = 0;
     // this is equals to iterate != NULL
     while(iterate){
         cout<<iterate->value<<" ";
         iterate = iterate->next;
+        size += sizeof(iterate->value);
     }
     cout<<"\nTotal length => "<<length<<endl;
+    cout<<"Total size of Node values => "<<size<<endl;
 }
 
